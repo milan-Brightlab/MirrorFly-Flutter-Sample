@@ -1,10 +1,10 @@
 {
     "appName": "Mirrorfly",
-    "registerYourNumber": "Register Your Number",
+    "registerYourNumber": "Register Your Mobile Number",
     "enterMobileNumber": "Enter Mobile Number",
     "registerMessage": "Please choose your country code and enter your mobile number to get the verification code.",
     "continue": "Continue",
-    "agree": "By clicking continue you agree to MirrorFly",
+    "agree": "By clicking continue you agree to Zambizi",
     "termsAndCondition": "Terms and Condition",
     "privacyPolicy": "Privacy Policy",
     "verify": "Verify",
@@ -16,6 +16,7 @@
     "hello": "Hello..!!",
     "chats": "Chats",
     "calls": "Calls",
+    "apps": "Apps",
     "searchPlaceholder": "Search...",
     "info": "Info",
     "delete": "Delete",
@@ -433,13 +434,13 @@
     "imageLess10mb": "Please select Image less than 10MB",
     "statusCantEmpty": "Status cannot be empty",
     "statusUpdated": "Status update successfully",
-    "defaultStatus": "I am in Mirror Fly",
+    "defaultStatus": "Welcome to Brightlab",
     "defaultStatusList" : [
         "Available",
         "Sleeping...",
         "Urgent calls only",
         "At the movies",
-        "I am in Mirror Fly"
+        "Welcome to Brightlab"
     ],
     "deletingStatus": "Deleting Status",
     "logoutConfirmation" : "Are you want to logout?",

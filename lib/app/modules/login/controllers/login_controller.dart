@@ -100,6 +100,7 @@ class LoginController extends GetxController {
       if(await validMobileNumber(selectedCountry.value.dialCode!,mobileNumber.text)) {
         // phoneAuth();
         registerAccount();
+
       }else{
         toToast(getTranslated("plsEnterValidMobileNumber"));
       }
@@ -323,10 +324,11 @@ class LoginController extends GetxController {
         toToast(getTranslated("mobileNumberTooShort"));
         return;
       }
-      if (mobileNumber.text.length < 10) {
-        toToast(getTranslated("plsEnterValidMobileNumber"));
-        return;
-      }
+      // if (mobileNumber.text.length < 10) {
+      //   print( mobileNumber.text.length);
+      //   toToast(getTranslated("plsEnterValidMobileNumber"));
+      //   return;
+      // }
       if (Platform.isAndroid && !(await AppPermission.askNotificationPermission())) {
         return;
       }

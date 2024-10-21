@@ -98,17 +98,18 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                                 decoration: InputDecoration(hintText: getTranslated("searchPlaceholder"), border: InputBorder.none,hintStyle: AppStyleConfig.dashBoardPageStyle.searchTextFieldStyle.editTextHintStyle),
                                       style: AppStyleConfig.dashBoardPageStyle.searchTextFieldStyle.editTextStyle,
                                               )
-                                            : null,
-                                    bottom: controller.isSearching.value
-                                        ? null
-                                        : TabBar(
-                                            controller: controller.tabController,
-                                            tabs: [
-                                                Obx(() {
-                                                  return tabItem(title: getTranslated("chats").toUpperCase(), count: controller.unreadCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle);
-                                                }),
-                                                tabItem(title: getTranslated("calls").toUpperCase(), count: controller.unreadCallCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle)
-                                              ]),
+                                          : null,
+                                    // bottom: controller.isSearching.value
+                                    //     ? null
+                                    //     : TabBar(
+                                    //         controller: controller.tabController,
+                                    //         tabs: [
+                                    //             Obx(() {
+                                    //               return tabItem(title: getTranslated("chats").toUpperCase(), count: controller.unreadCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle);
+                                    //             }),
+                                    //             tabItem(title: getTranslated("calls").toUpperCase(), count: controller.unreadCallCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle)
+                                    //           ]),
+
                                     actions: [
                                       CustomActionBarIcons(
                                         popupMenuThemeData: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData,
@@ -244,19 +245,20 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                                 controller.itemsUnRead();
                                               },
                                             ),
+
                                             CustomAction(
                                               visibleWidget: IconButton(
                                                 onPressed: () {
-                                                  controller.gotoSearch();
+                                                  controller.gotoContacts();
                                                 },
                                                 icon: AppUtils.svgIcon(icon:
-                                                  searchIcon,
+                                                 newChat,
                                                   width: 18,
                                                   height: 18,
                                                   fit: BoxFit.contain,
                                                     colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
                                                 ),
-                                                tooltip: 'Search',
+                                                tooltip: 'New Message',
                                               ),
                                               overflowWidget: Text(getTranslated("search"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
                                               showAsAction: controller.availableFeatures.value.isRecentChatSearchAvailable.checkNull()
@@ -264,11 +266,37 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                                       ? ShowAsAction.gone
                                                       : ShowAsAction.always
                                                   : ShowAsAction.gone,
-                                              keyValue: 'Search',
+                                              keyValue: 'New Message',
                                               onItemClick: () {
-                                                controller.gotoSearch();
+                                                controller.gotoContacts();
                                               },
                                             ),
+
+                                            // CustomAction(
+                                            //   visibleWidget: IconButton(
+                                            //     onPressed: () {
+                                            //       controller.gotoContacts();
+                                            //     },
+                                            //     icon: AppUtils.svgIcon(icon:
+                                            //     searchIcon,
+                                            //         width: 18,
+                                            //         height: 18,
+                                            //         fit: BoxFit.contain,
+                                            //         colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
+                                            //     ),
+                                            //     tooltip: 'Search',
+                                            //   ),
+                                            //   overflowWidget: Text(getTranslated("search"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                            //   showAsAction: controller.availableFeatures.value.isRecentChatSearchAvailable.checkNull()
+                                            //       ? controller.selected.value || controller.isSearching.value
+                                            //       ? ShowAsAction.gone
+                                            //       : ShowAsAction.always
+                                            //       : ShowAsAction.gone,
+                                            //   keyValue: 'Search',
+                                            //   onItemClick: () {
+                                            //     controller.gotoSearch();
+                                            //   },
+                                            // ),
                                             CustomAction(
                                               visibleWidget: IconButton(onPressed: () => controller.onClearPressed(), icon: const Icon(Icons.close)),
                                               overflowWidget: Text(getTranslated("clear"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
@@ -330,8 +358,31 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                               RecentChatView(controller: controller, archivedTileStyle: AppStyleConfig.dashBoardPageStyle.archivedTileStyle, recentChatItemStyle: AppStyleConfig.dashBoardPageStyle.recentChatItemStyle,noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,contactItemStyle: AppStyleConfig.dashBoardPageStyle.contactItemStyle,),
                               CallHistoryView(controller: controller,callHistoryItemStyle: AppStyleConfig.dashBoardPageStyle.callHistoryItemStyle,noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,
                               createMeetLinkStyle: AppStyleConfig.dashBoardPageStyle.createMeetLinkStyle,recentCallsTitleStyle: AppStyleConfig.dashBoardPageStyle.titlesTextStyle,meetBottomSheetStyle: AppStyleConfig.dashBoardPageStyle.meetBottomSheetStyle,)
-                            ])));
+                            ])),
+
+                    bottomNavigationBar: BottomNavigationBar(
+                    // currentIndex: controller.selectedTab.value,
+                    //     onTap: (index) {
+                    //       controller.changeTab(index);
+                    //     },
+                      items: const [
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.chat),
+                          label: 'Chats',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.call),
+                          label: 'Calls',
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.apps),
+                          label: 'Apps',
+                        ),
+                      ],
+                    ),
+                    );
                   }),
+
                 ),
               ),
             ),
@@ -363,19 +414,19 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
   // Create fab for provided index
   Widget createFab(final int index,BuildContext context) {
     if (index == 0) {
-      return FloatingActionButton(
-        tooltip: "New Chat",
-        heroTag: "New Chat",
-        onPressed: () {
-          controller.gotoContacts();
-        },
-        child:
-        AppUtils.svgIcon(icon:
-          chatFabIcon,
-          width: Theme.of(context).floatingActionButtonTheme.iconSize,
-          colorFilter: ColorFilter.mode(Theme.of(context).floatingActionButtonTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
-        ),
-      );
+      // return FloatingActionButton(
+      //   tooltip: "New Chat",
+      //   heroTag: "New Chat",
+      //   onPressed: () {
+      //     controller.gotoContacts();
+      //   },
+      //   child:
+      //   AppUtils.svgIcon(icon:
+      //     chatFabIcon,
+      //     width: Theme.of(context).floatingActionButtonTheme.iconSize,
+      //     colorFilter: ColorFilter.mode(Theme.of(context).floatingActionButtonTheme.foregroundColor ?? Colors.white, BlendMode.srcIn),
+      //   ),
+      // );
     }
     // Not created fab for 1 index deliberately
     if (index == 1) {

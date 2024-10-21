@@ -65,10 +65,10 @@
             android:name="flutterEmbedding"
             android:value="2" />
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR GOOGLE KEY HERE"/>
+            android:value="AIzaSyBbiBMMrraD9Xd7LnEMaTJ8_CMAzGwon1E"/>
 
         <meta-data android:name="com.google.android.geo.API_THUMP_KEY"
-            android:value="YOUR GOOGLE KEY HERE"/>
+            android:value="AIzaSyBbiBMMrraD9Xd7LnEMaTJ8_CMAzGwon1E"/>
 
         <meta-data
             android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"

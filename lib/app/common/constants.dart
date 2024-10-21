@@ -110,8 +110,11 @@ const String addParticipantsInCall = 'assets/calls/add_user_in_call.svg';
 //Assets
 const String mirrorflySmall = 'assets/logos/ic_notification_small.png';
 const String registerIcon = 'assets/logos/register_logo.svg';
+// const String zambiziLogo = 'assets/logos/zambizi_logo.svg';
 const String statusIcon = 'assets/logos/status.svg';
 const String searchIcon = 'assets/logos/magnifying_glass.svg';
+const String dotMenu = 'assets/logos/dotMenu.svg';
+const String newChat = 'assets/logos/newChat.svg';
 const String chatFabIcon = 'assets/logos/chat_fab.svg';
 const String moreIcon = 'assets/logos/shape.svg';
 const String noContactsIcon = 'assets/logos/no_contacts.png';

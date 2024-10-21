@@ -78,7 +78,7 @@ Future<void> main() async {
 
   await SessionManagement.onInit();
   Mirrorfly.initializeSDK(
-      licenseKey: 'Your_License_Key_Here',
+      licenseKey: 'B69tZ9ei1km1V8GLjcAZmH0m87en18',
       iOSContainerID: 'group.com.mirrorfly.flutter', //group.com.mirrorfly.flutter
       chatHistoryEnable: true,
       enableDebugLog: true,
