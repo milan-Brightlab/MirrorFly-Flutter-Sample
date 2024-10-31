@@ -115,6 +115,7 @@ const String statusIcon = 'assets/logos/status.svg';
 const String searchIcon = 'assets/logos/magnifying_glass.svg';
 const String dotMenu = 'assets/logos/dotMenu.svg';
 const String newChat = 'assets/logos/newChat.svg';
+const String groupIcon = 'assets/logos/group_ic.svg';
 const String chatFabIcon = 'assets/logos/chat_fab.svg';
 const String moreIcon = 'assets/logos/shape.svg';
 const String noContactsIcon = 'assets/logos/no_contacts.png';

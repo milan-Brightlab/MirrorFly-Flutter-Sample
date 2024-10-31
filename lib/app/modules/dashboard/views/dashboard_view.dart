@@ -19,6 +19,7 @@ import '../../dashboard/controllers/dashboard_controller.dart';
 class DashboardView extends NavViewStateful<DashboardController> {
   const DashboardView({Key? key}) : super(key: key);
 
+
   @override
 DashboardController createController({String? tag}) => Get.put(DashboardController(),tag: key?.hashCode.toString());
 
@@ -65,40 +66,11 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                               return [
                                 Obx(() {
+
                                   return SliverAppBar(
                                     snap: false,
                                     pinned: true,
-                                    floating: !controller.selected.value || !controller.isSearching.value,
-                                    automaticallyImplyLeading: false,
-                                    leading: controller.selected.value
-                                        ? IconButton(
-                                            icon: const Icon(Icons.clear),
-                                            onPressed: () {
-                                              controller.clearAllChatSelection();
-                                            },
-                                          )
-                                        : controller.isSearching.value
-                                            ? IconButton(
-                                                icon: const Icon(Icons.arrow_back),
-                                                onPressed: () {
-                                                  controller.getBackFromSearch();
-                                                },
-                                              )
-                                            : null,
-                                    title: controller.selected.value
-                                        ? controller.currentTab.value == 0
-                                            ? Text((controller.selectedChats.length).toString(),style: AppStyleConfig.dashBoardPageStyle.appBarTheme.titleTextStyle,)
-                                            : Text((controller.selectedCallLogs.length).toString(),style: AppStyleConfig.dashBoardPageStyle.appBarTheme.titleTextStyle)
-                                        : controller.isSearching.value
-                                            ? TextField(
-                                                focusNode: controller.searchFocusNode,
-                                                onChanged: (text) => controller.onChange(text, controller.currentTab.value),
-                                                controller: controller.search,
-                                                autofocus: true,
-                                                decoration: InputDecoration(hintText: getTranslated("searchPlaceholder"), border: InputBorder.none,hintStyle: AppStyleConfig.dashBoardPageStyle.searchTextFieldStyle.editTextHintStyle),
-                                      style: AppStyleConfig.dashBoardPageStyle.searchTextFieldStyle.editTextStyle,
-                                              )
-                                          : null,
+
                                     // bottom: controller.isSearching.value
                                     //     ? null
                                     //     : TabBar(
@@ -110,12 +82,38 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                     //             tabItem(title: getTranslated("calls").toUpperCase(), count: controller.unreadCallCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle)
                                     //           ]),
 
+
+                                    flexibleSpace: Obx(() => FlexibleSpaceBar(
+
+                                      title: Text(controller.selectedName.value,
+                                        style: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle ),
+                                      centerTitle: true,
+
+
+                                    )),
+
+                                    leading: GetBuilder<DashboardController>(
+                                      builder: (controller) {
+                                        return Visibility(
+                                         // visible: controller.availableFeatures.value.isRecentChatSearchAvailable && !controller.isSearching.value,
+                                          child: TextButton(
+                                            onPressed: () {
+                                              // Custom logic for button
+                                            },
+                                            child: Text(
+                                              'Edit',
+                                              style: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                     actions: [
                                       CustomActionBarIcons(
                                         popupMenuThemeData: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData,
                                           availableWidth: NavUtils.size.width * 0.80,
                                           // 80 percent of the screen width
-                                          actionWidth: 48,
+                                          actionWidth: 50,
                                           // default for IconButtons
                                           actions: [
                                             CustomAction(
@@ -253,8 +251,8 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                                 },
                                                 icon: AppUtils.svgIcon(icon:
                                                  newChat,
-                                                  width: 18,
-                                                  height: 18,
+                                                  width: 20,
+                                                  height: 20,
                                                   fit: BoxFit.contain,
                                                     colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
                                                 ),
@@ -271,32 +269,32 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                                 controller.gotoContacts();
                                               },
                                             ),
+                                            CustomAction(
+                                              visibleWidget: IconButton(
+                                                onPressed: () {
+                                                  controller.gotoCreateGroup();
+                                                },
+                                                icon: AppUtils.svgIcon(icon:
+                                                groupIcon,
+                                                    width: 22,
+                                                    height: 22,
+                                                    fit: BoxFit.contain,
+                                                    colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
+                                                ),
+                                                tooltip: 'New Group',
+                                              ),
+                                              overflowWidget: Text(getTranslated("search"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                              showAsAction: controller.availableFeatures.value.isRecentChatSearchAvailable.checkNull()
+                                                  ? controller.selected.value || controller.isSearching.value
+                                                  ? ShowAsAction.gone
+                                                  : ShowAsAction.always
+                                                  : ShowAsAction.gone,
+                                              keyValue: 'New Group',
+                                              onItemClick: () {
+                                                controller.gotoContacts();
+                                              },
+                                            ),
 
-                                            // CustomAction(
-                                            //   visibleWidget: IconButton(
-                                            //     onPressed: () {
-                                            //       controller.gotoContacts();
-                                            //     },
-                                            //     icon: AppUtils.svgIcon(icon:
-                                            //     searchIcon,
-                                            //         width: 18,
-                                            //         height: 18,
-                                            //         fit: BoxFit.contain,
-                                            //         colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
-                                            //     ),
-                                            //     tooltip: 'Search',
-                                            //   ),
-                                            //   overflowWidget: Text(getTranslated("search"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                            //   showAsAction: controller.availableFeatures.value.isRecentChatSearchAvailable.checkNull()
-                                            //       ? controller.selected.value || controller.isSearching.value
-                                            //       ? ShowAsAction.gone
-                                            //       : ShowAsAction.always
-                                            //       : ShowAsAction.gone,
-                                            //   keyValue: 'Search',
-                                            //   onItemClick: () {
-                                            //     controller.gotoSearch();
-                                            //   },
-                                            // ),
                                             CustomAction(
                                               visibleWidget: IconButton(onPressed: () => controller.onClearPressed(), icon: const Icon(Icons.close)),
                                               overflowWidget: Text(getTranslated("clear"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
@@ -306,19 +304,19 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                                 controller.onClearPressed();
                                               },
                                             ),
-                                            CustomAction(
-                                              visibleWidget: const Icon(Icons.group_add),
-                                              overflowWidget: Text(getTranslated("newGroup"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.availableFeatures.value.isGroupChatAvailable.checkNull()
-                                                  ? controller.selected.value || controller.isSearching.value
-                                                      ? ShowAsAction.gone
-                                                      : ShowAsAction.never
-                                                  : ShowAsAction.gone,
-                                              keyValue: 'New Group',
-                                              onItemClick: () {
-                                                controller.gotoCreateGroup();
-                                              },
-                                            ),
+                                            // CustomAction(
+                                            //   visibleWidget: const Icon(Icons.group_add),
+                                            //   overflowWidget: Text(getTranslated("newGroup"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                            //   showAsAction: controller.availableFeatures.value.isGroupChatAvailable.checkNull()
+                                            //       ? controller.selected.value || controller.isSearching.value
+                                            //           ? ShowAsAction.gone
+                                            //           : ShowAsAction.never
+                                            //       : ShowAsAction.gone,
+                                            //   keyValue: 'New Group',
+                                            //   onItemClick: () {
+                                            //     controller.gotoCreateGroup();
+                                            //   },
+                                            // ),
                                             CustomAction(
                                               visibleWidget: const Icon(Icons.web),
                                               overflowWidget: Text(getTranslated("clearCallLog"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
@@ -330,16 +328,16 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                               onItemClick: () =>
                                                   controller.callLogList.isNotEmpty ? controller.clearCallLog() : toToast(getTranslated("noCallLog")),
                                             ),
-                                            CustomAction(
-                                              visibleWidget: const Icon(Icons.settings),
-                                              overflowWidget: Text(getTranslated("settings"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction:
-                                                  controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
-                                              keyValue: 'Settings',
-                                              onItemClick: () {
-                                                controller.gotoSettings();
-                                              },
-                                            ),
+                                            // CustomAction(
+                                            //   visibleWidget: const Icon(Icons.settings),
+                                            //   overflowWidget: Text(getTranslated("settings"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
+                                            //   showAsAction:
+                                            //       controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
+                                            //   keyValue: 'Settings',
+                                            //   onItemClick: () {
+                                            //     controller.gotoSettings();
+                                            //   },
+                                            // ),
                                             /*CustomAction(
                                               visibleWidget: const Icon(Icons.web),
                                               overflowWidget: Text(getTranslated("web"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
@@ -350,38 +348,124 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                             ),*/
                                           ]),
                                     ],
+
                                   );
+
                                 }),
+
+                                SliverAppBar(
+                                  snap: true, // Allows the bar to snap when scrolling
+                                  floating: true, // Keeps the bar visible and responsive
+                                  pinned: true, // Keeps the bar pinned when scrolling up
+                                  flexibleSpace: FlexibleSpaceBar(
+                                    titlePadding: EdgeInsets.only(left: 20, right: 20, bottom: 14),
+                                    title: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end, // Align title to the bottom
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(top: 0),
+                                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[800], // Search bar background color
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              print("this is me testing");
+                                            //  _focusNode.requestFocus(); // Focus on the search bar when clicked
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.search,
+                                                  size: 20,
+                                                  color: Colors.grey[500],
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  'Search',
+                                                  style: TextStyle(color: Colors.grey[500], fontSize: 18),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+
                               ];
                             },
-                            body: TabBarView(controller: controller.tabController, children: [
-                              RecentChatView(controller: controller, archivedTileStyle: AppStyleConfig.dashBoardPageStyle.archivedTileStyle, recentChatItemStyle: AppStyleConfig.dashBoardPageStyle.recentChatItemStyle,noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,contactItemStyle: AppStyleConfig.dashBoardPageStyle.contactItemStyle,),
-                              CallHistoryView(controller: controller,callHistoryItemStyle: AppStyleConfig.dashBoardPageStyle.callHistoryItemStyle,noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,
-                              createMeetLinkStyle: AppStyleConfig.dashBoardPageStyle.createMeetLinkStyle,recentCallsTitleStyle: AppStyleConfig.dashBoardPageStyle.titlesTextStyle,meetBottomSheetStyle: AppStyleConfig.dashBoardPageStyle.meetBottomSheetStyle,)
-                            ])),
 
-                    bottomNavigationBar: BottomNavigationBar(
-                    // currentIndex: controller.selectedTab.value,
-                    //     onTap: (index) {
-                    //       controller.changeTab(index);
-                    //     },
-                      items: const [
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.chat),
-                          label: 'Chats',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.call),
-                          label: 'Calls',
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.apps),
-                          label: 'Apps',
-                        ),
-                      ],
-                    ),
-                    );
-                  }),
+
+                            body: Obx(() => IndexedStack( index: controller.selectedIndex.value,
+                              children: [
+                                RecentChatView(
+                                  controller: controller,
+                                  archivedTileStyle: AppStyleConfig.dashBoardPageStyle.archivedTileStyle,
+                                  recentChatItemStyle: AppStyleConfig.dashBoardPageStyle.recentChatItemStyle,
+                                  noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,
+                                  contactItemStyle: AppStyleConfig.dashBoardPageStyle.contactItemStyle,
+                                ),
+                                CallHistoryView(
+                                  controller: controller,
+                                  callHistoryItemStyle: AppStyleConfig.dashBoardPageStyle.callHistoryItemStyle,
+                                  noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,
+                                  createMeetLinkStyle: AppStyleConfig.dashBoardPageStyle.createMeetLinkStyle,
+                                  recentCallsTitleStyle: AppStyleConfig.dashBoardPageStyle.titlesTextStyle,
+                                  meetBottomSheetStyle: AppStyleConfig.dashBoardPageStyle.meetBottomSheetStyle,
+                                ),
+                              ],
+                            )
+                        )),
+
+                            bottomNavigationBar: Obx(() => BottomNavigationBar(
+                              backgroundColor: Colors.white, // Background color
+                              selectedItemColor: Colors.blue, // Color for selected icon/text
+                              unselectedItemColor: Colors.grey, // Color for unselected icon/text
+                              iconSize: 30, // Icon size
+                              selectedFontSize: 14, // Selected label font size
+                              unselectedFontSize: 12,
+                              // Unselected label font size
+                              items: const [
+                                BottomNavigationBarItem(
+                                  icon: Icon(Icons.chat),
+                                  label: 'Chats',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: Icon(Icons.call),
+                                  label: 'Calls',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: Icon(Icons.apps),
+                                  label: 'Apps',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: Icon(Icons.wallet),
+                                  label: 'Wallet',
+                                ),
+                                BottomNavigationBarItem(
+                                  icon: Icon(Icons.settings),
+                                  label: 'Settings',
+                                ),
+                              ],
+                              currentIndex: controller.selectedIndex.value,
+                              onTap: (int index) {
+                                // First, update the index to switch the view
+                                controller.updateIndex(index);
+
+                                // Then, if the tapped item is the settings item, call the gotoSettings function
+                                if (index == 4) { // Assuming the settings bar item is at index 2
+                                  controller.gotoSettings();
+                                }
+                              },
+                            ),
+                            )
+                          );
+                          }),
 
                 ),
               ),
@@ -449,33 +533,5 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
       );
     }
     return const Offstage();
-  }
-
-  Widget tabItem({required String title, required String count,required TabItemStyle tabItemStyle}) {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: tabItemStyle.textStyle,//const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
-          ),
-          int.parse(count) > 0
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: CircleAvatar(
-                    backgroundColor: tabItemStyle.countIndicatorStyle.bgColor,
-                    radius: 9,
-                    child: Text(
-                      count.toString(),
-                      style: tabItemStyle.countIndicatorStyle.textStyle,//const TextStyle(fontSize: 12, color: Colors.white, fontFamily: 'sf_ui'),
-                    ),
-                  ),
-                )
-              : const Offstage()
-        ],
-      ),
-    );
   }
 }

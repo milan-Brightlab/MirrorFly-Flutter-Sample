@@ -61,8 +61,23 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
 
 
   TabController? tabController;
-
+  final List<String> titleNames = ["Chats", "Calls", "Apps","Wallet"];
   RxInt currentTab = 0.obs;
+  var selectedIndex = 0.obs;
+  var selectedName = "Chats".obs;
+
+  void updateIndex(int index) {
+    selectedIndex.value = index;
+    selectedName.value = titleNames[index];
+  }
+
+
+  FocusNode _focusNode = FocusNode();
+
+  // Widget getFirstSliverAppBar() {
+  //   if (selectedIndex.value == 0) {
+  //     // SliverAppBar for "Chats"
+  //     return
 
   // Number of tabs
   static const tabsCount = 2;
