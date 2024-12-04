@@ -1,6 +1,6 @@
 // import 'package:firebase_messaging/firebase_messaging.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
+//
 
 import 'dart:io';
 
@@ -17,6 +17,8 @@ import '../common/notification_service.dart';
 import '../modules/notification/notification_builder.dart';
 import '../routes/app_pages.dart';
 
+
+
 class PushNotifications {
   PushNotifications._();
   // static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -26,7 +28,7 @@ class PushNotifications {
 
     FirebaseMessaging.onMessage.listen((message){
       debugPrint('#Mirrorfly Notification -> Got a message whilst in the foreground!');
-      // onMessage(message);
+      onMessage(message);
     });
   }
   /// Create a [AndroidNotificationChannel] for heads up notifications
@@ -92,7 +94,7 @@ class PushNotifications {
   }
   static void initInfo(){
     NotificationService().init();
-    /*var androidInitialize = const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var androidInitialize = const AndroidInitializationSettings('@mipmap/ic_launcher');
     var iosInitialize = const DarwinInitializationSettings();
     var initalizationSettings = InitializationSettings(android: androidInitialize,iOS: iosInitialize);
     flutterLocalNotificationsPlugin.initialize(initalizationSettings,onDidReceiveNotificationResponse: (NotificationResponse response){
@@ -105,7 +107,7 @@ class PushNotifications {
         LogMessage.d("error", e.toString());
         return;
       }
-    });*/
+    });
   }
   // It is assumed that all messages contain a data field with the key 'type'
   static Future<void> setupInteractedMessage() async {
@@ -119,9 +121,9 @@ class PushNotifications {
     //This below method will called, when clicking the notification popup in the screen itself during the message received. Not from the notification tray
     if (initialMessage != null) {
       debugPrint("#Mirrorfly Notification setupInteractedMessage message opened from notification click terminated");
-      // onMessage(initialMessage);
+      onMessage(initialMessage);
       debugPrint("#Mirrorfly Notification message received for ${initialMessage.data["to_user"]}");
-      debugPrint("#Mirrorfly Notification message received for ${initialMessage.data}");
+    debugPrint("#Mirrorfly Notification message received for ${initialMessage.data}");
       NavUtils.offAllNamed("${AppPages.chat}?jid=${initialMessage.data["from_user"]}&from_notification=true");
       return;
     }else{
@@ -156,7 +158,7 @@ class PushNotifications {
       var permission = await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
-      debugPrint("permission :$permission");
+      debugPrint("#Mirrorfly Notification -> permission :$permission");
     }
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -191,18 +193,22 @@ class PushNotifications {
   }
 
   static void showNotification(RemoteMessage remoteMessage) {
+    debugPrint('#Mirrorfly Notification -> Attempting to show notification');
     var notificationData = remoteMessage.data;
     if(!remoteMessage.data.containsKey("message_id")){
       notificationData["message_id"]=remoteMessage.messageId;
     }
     if(notificationData.isNotEmpty && Platform.isAndroid) {
       WidgetsFlutterBinding.ensureInitialized();
+      debugPrint('#Mirrorfly Notification -> Processing notification data: ${notificationData.toString()}');
+
       Mirrorfly.handleReceivedMessage(notificationData: notificationData, flyCallBack: (FlyResponse response) {
           LogMessage.d("#Mirrorfly Notification -> notification message", response.toString());
         if(response.isSuccess && response.hasData){
           var data = sendMessageModelFromJson(response.data);
           if(data.messageId.isNotEmpty) {
             NotificationBuilder.createNotification(data,autoCancel: false);
+            debugPrint("#Mirrorfly Notification -> Notification created for message: ${data.messageId}");
           }
         }
       });

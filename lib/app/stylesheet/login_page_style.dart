@@ -8,6 +8,10 @@ class LoginPageStyle{
   const LoginPageStyle({
     // Style for the AppBar text
     this.appBarTextStyle = const TextStyle(fontWeight: FontWeight.w700, color: Color(0xff181818),fontSize: 20),
+
+    this.appTitle = const TextStyle(fontWeight: FontWeight.w700, color: Color(0xff181818),fontSize: 28),
+    // Style for the BulletPoint Text
+    this.bulletPointText = const TextStyle(fontWeight: FontWeight.w700, color: Color(0xffffffff),fontSize: 20),
     // Style for the body title text
     this.bodyTitleStyle = const TextStyle(fontWeight: FontWeight.w500, color: Color(0xff181818),fontSize: 15),
     // Style for the body description text
@@ -28,6 +32,10 @@ class LoginPageStyle{
 
   // AppBar text style
   final TextStyle appBarTextStyle;
+  //appTitle Text Style
+  final TextStyle appTitle;
+  //bulletPointText Text Style
+  final TextStyle bulletPointText;
   // Body title text style
   final TextStyle bodyTitleStyle;
   // Body description text style

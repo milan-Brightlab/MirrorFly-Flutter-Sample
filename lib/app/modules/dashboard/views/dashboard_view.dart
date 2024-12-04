@@ -6,15 +6,21 @@ import '../../../common/constants.dart';
 import '../../../extensions/extensions.dart';
 import '../../../modules/dashboard/views/callhistory_view.dart';
 import '../../../modules/dashboard/views/recentchat_view.dart';
+import '../../../modules/dashboard/views/installedapps_view.dart';
+import '../../../modules/dashboard/views/walletpage_view.dart';
+import '../../settings/views/settings_view.dart';
 import '../../../stylesheet/stylesheet.dart';
 import '../../../widgets/animated_floating_action.dart';
 import 'package:mirrorfly_plugin/mirrorflychat.dart';
+import '../../apps/controllers/miniapp_controller.dart';
 
 import '../../../common/app_localizations.dart';
 import '../../../common/app_theme.dart';
 import '../../../data/utils.dart';
 import '../../../widgets/custom_action_bar_icons.dart';
 import '../../dashboard/controllers/dashboard_controller.dart';
+import '../../dashboard/dashboard_widgets/appbar_widgets.dart';
+
 
 class DashboardView extends NavViewStateful<DashboardController> {
   const DashboardView({Key? key}) : super(key: key);
@@ -65,342 +71,14 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                         body: NestedScrollView(
                             headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                               return [
-                                Obx(() {
-
-                                  return SliverAppBar(
-                                    snap: false,
-                                    pinned: true,
-
-                                    // bottom: controller.isSearching.value
-                                    //     ? null
-                                    //     : TabBar(
-                                    //         controller: controller.tabController,
-                                    //         tabs: [
-                                    //             Obx(() {
-                                    //               return tabItem(title: getTranslated("chats").toUpperCase(), count: controller.unreadCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle);
-                                    //             }),
-                                    //             tabItem(title: getTranslated("calls").toUpperCase(), count: controller.unreadCallCountString,tabItemStyle: AppStyleConfig.dashBoardPageStyle.tabItemStyle)
-                                    //           ]),
-
-
-                                    flexibleSpace: Obx(() => FlexibleSpaceBar(
-
-                                      title: Text(controller.selectedName.value,
-                                        style: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle ),
-                                      centerTitle: true,
-
-
-                                    )),
-
-                                    leading: GetBuilder<DashboardController>(
-                                      builder: (controller) {
-                                        return Visibility(
-                                         // visible: controller.availableFeatures.value.isRecentChatSearchAvailable && !controller.isSearching.value,
-                                          child: TextButton(
-                                            onPressed: () {
-                                              // Custom logic for button
-                                            },
-                                            child: Text(
-                                              'Edit',
-                                              style: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    actions: [
-                                      CustomActionBarIcons(
-                                        popupMenuThemeData: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData,
-                                          availableWidth: NavUtils.size.width * 0.80,
-                                          // 80 percent of the screen width
-                                          actionWidth: 50,
-                                          // default for IconButtons
-                                          actions: [
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.chatInfo();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:infoIcon,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
-                                                tooltip: 'Info',
-                                              ),
-                                              overflowWidget: Text(getTranslated("info"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.info.value ? ShowAsAction.always : ShowAsAction.gone,
-                                              keyValue: 'Info',
-                                              onItemClick: () {
-                                                controller.chatInfo();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.currentTab.value == 0 ? controller.deleteChats() : controller.deleteCallLog();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:delete,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
-                                                tooltip: 'Delete',
-                                              ),
-                                              overflowWidget: Text(getTranslated("delete"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.availableFeatures.value.isDeleteChatAvailable.checkNull()
-                                                  ? controller.delete.value
-                                                      ? ShowAsAction.always
-                                                      : ShowAsAction.gone
-                                                  : ShowAsAction.gone,
-                                              keyValue: 'Delete',
-                                              onItemClick: () {
-                                                controller.deleteChats();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.pinChats();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:pin,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
-                                                tooltip: 'Pin',
-                                              ),
-                                              overflowWidget: Text(getTranslated("pin"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.pin.value ? ShowAsAction.always : ShowAsAction.gone,
-                                              keyValue: 'Pin',
-                                              onItemClick: () {
-                                                controller.pinChats();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.unPinChats();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:unpin,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
-                                                tooltip: 'UnPin',
-                                              ),
-                                              overflowWidget: Text(getTranslated("unPin"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.unpin.value ? ShowAsAction.always : ShowAsAction.gone,
-                                              keyValue: 'UnPin',
-                                              onItemClick: () {
-                                                controller.unPinChats();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.muteChats();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:mute,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
-                                                tooltip: 'Mute',
-                                              ),
-                                              overflowWidget: Text(getTranslated("mute"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.mute.value ? ShowAsAction.always : ShowAsAction.gone,
-                                              keyValue: 'Mute',
-                                              onItemClick: () {
-                                                controller.muteChats();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.unMuteChats();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:unMute,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
-                                                tooltip: 'UnMute',
-                                              ),
-                                              overflowWidget: Text(getTranslated("unMute"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.unmute.value ? ShowAsAction.always : ShowAsAction.gone,
-                                              keyValue: 'UnMute',
-                                              onItemClick: () {
-                                                controller.unMuteChats();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.archiveChats();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:archive,colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)),
-                                                tooltip: 'Archive',
-                                              ),
-                                              overflowWidget: Text(getTranslated("archived"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.archive.value ? ShowAsAction.always : ShowAsAction.gone,
-                                              keyValue: 'Archived',
-                                              onItemClick: () {
-                                                controller.archiveChats();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: const Icon(Icons.mark_chat_read),
-                                              overflowWidget: Text(getTranslated("markAsRead"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.read.value ? ShowAsAction.never : ShowAsAction.gone,
-                                              keyValue: 'Mark as Read',
-                                              onItemClick: () {
-                                                controller.itemsRead();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: const Icon(Icons.mark_chat_unread),
-                                              overflowWidget: Text(getTranslated("markAsUnread"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.unread.value ? ShowAsAction.never : ShowAsAction.gone,
-                                              keyValue: 'Mark as unread',
-                                              onItemClick: () {
-                                                controller.itemsUnRead();
-                                              },
-                                            ),
-
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.gotoContacts();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:
-                                                 newChat,
-                                                  width: 20,
-                                                  height: 20,
-                                                  fit: BoxFit.contain,
-                                                    colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
-                                                ),
-                                                tooltip: 'New Message',
-                                              ),
-                                              overflowWidget: Text(getTranslated("search"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.availableFeatures.value.isRecentChatSearchAvailable.checkNull()
-                                                  ? controller.selected.value || controller.isSearching.value
-                                                      ? ShowAsAction.gone
-                                                      : ShowAsAction.always
-                                                  : ShowAsAction.gone,
-                                              keyValue: 'New Message',
-                                              onItemClick: () {
-                                                controller.gotoContacts();
-                                              },
-                                            ),
-                                            CustomAction(
-                                              visibleWidget: IconButton(
-                                                onPressed: () {
-                                                  controller.gotoCreateGroup();
-                                                },
-                                                icon: AppUtils.svgIcon(icon:
-                                                groupIcon,
-                                                    width: 22,
-                                                    height: 22,
-                                                    fit: BoxFit.contain,
-                                                    colorFilter: ColorFilter.mode(Theme.of(context).appBarTheme.actionsIconTheme?.color ?? Colors.black, BlendMode.srcIn)
-                                                ),
-                                                tooltip: 'New Group',
-                                              ),
-                                              overflowWidget: Text(getTranslated("search"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.availableFeatures.value.isRecentChatSearchAvailable.checkNull()
-                                                  ? controller.selected.value || controller.isSearching.value
-                                                  ? ShowAsAction.gone
-                                                  : ShowAsAction.always
-                                                  : ShowAsAction.gone,
-                                              keyValue: 'New Group',
-                                              onItemClick: () {
-                                                controller.gotoContacts();
-                                              },
-                                            ),
-
-                                            CustomAction(
-                                              visibleWidget: IconButton(onPressed: () => controller.onClearPressed(), icon: const Icon(Icons.close)),
-                                              overflowWidget: Text(getTranslated("clear"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction: controller.clearVisible.value ? ShowAsAction.always : ShowAsAction.gone,
-                                              keyValue: 'Clear',
-                                              onItemClick: () {
-                                                controller.onClearPressed();
-                                              },
-                                            ),
-                                            // CustomAction(
-                                            //   visibleWidget: const Icon(Icons.group_add),
-                                            //   overflowWidget: Text(getTranslated("newGroup"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                            //   showAsAction: controller.availableFeatures.value.isGroupChatAvailable.checkNull()
-                                            //       ? controller.selected.value || controller.isSearching.value
-                                            //           ? ShowAsAction.gone
-                                            //           : ShowAsAction.never
-                                            //       : ShowAsAction.gone,
-                                            //   keyValue: 'New Group',
-                                            //   onItemClick: () {
-                                            //     controller.gotoCreateGroup();
-                                            //   },
-                                            // ),
-                                            CustomAction(
-                                              visibleWidget: const Icon(Icons.web),
-                                              overflowWidget: Text(getTranslated("clearCallLog"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction:
-                                                  controller.selected.value || controller.isSearching.value || controller.currentTab.value == 0 || controller.callLogList.isEmpty
-                                                      ? ShowAsAction.gone
-                                                      : ShowAsAction.never,
-                                              keyValue: 'Clear call log',
-                                              onItemClick: () =>
-                                                  controller.callLogList.isNotEmpty ? controller.clearCallLog() : toToast(getTranslated("noCallLog")),
-                                            ),
-                                            // CustomAction(
-                                            //   visibleWidget: const Icon(Icons.settings),
-                                            //   overflowWidget: Text(getTranslated("settings"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                            //   showAsAction:
-                                            //       controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
-                                            //   keyValue: 'Settings',
-                                            //   onItemClick: () {
-                                            //     controller.gotoSettings();
-                                            //   },
-                                            // ),
-                                            /*CustomAction(
-                                              visibleWidget: const Icon(Icons.web),
-                                              overflowWidget: Text(getTranslated("web"),style:AppStyleConfig.dashBoardPageStyle.popupMenuThemeData.textStyle),
-                                              showAsAction:
-                                                  controller.selected.value || controller.isSearching.value ? ShowAsAction.gone : ShowAsAction.never,
-                                              keyValue: 'Web',
-                                              onItemClick: () => controller.webLogin(),
-                                            ),*/
-                                          ]),
-                                    ],
-
-                                  );
-
-                                }),
-
-                                SliverAppBar(
-                                  snap: true, // Allows the bar to snap when scrolling
-                                  floating: true, // Keeps the bar visible and responsive
-                                  pinned: true, // Keeps the bar pinned when scrolling up
-                                  flexibleSpace: FlexibleSpaceBar(
-                                    titlePadding: EdgeInsets.only(left: 20, right: 20, bottom: 14),
-                                    title: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end, // Align title to the bottom
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(top: 0),
-                                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[800], // Search bar background color
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              print("this is me testing");
-                                            //  _focusNode.requestFocus(); // Focus on the search bar when clicked
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.search,
-                                                  size: 20,
-                                                  color: Colors.grey[500],
-                                                ),
-                                                SizedBox(width: 8),
-                                                Text(
-                                                  'Search',
-                                                  style: TextStyle(color: Colors.grey[500], fontSize: 18),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-
+                                // CustomSliverAppBar(
+                                //   key: const ValueKey('dashboard_sliver_appbar'),
+                                //   controller: controller,
+                                //   title: 'Chats',
+                                //   popupMenuThemeData: AppStyleConfig.dashBoardPageStyle.popupMenuThemeData,
+                                // ),
                               ];
                             },
-
-
                             body: Obx(() => IndexedStack( index: controller.selectedIndex.value,
                               children: [
                                 RecentChatView(
@@ -418,6 +96,20 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                                   recentCallsTitleStyle: AppStyleConfig.dashBoardPageStyle.titlesTextStyle,
                                   meetBottomSheetStyle: AppStyleConfig.dashBoardPageStyle.meetBottomSheetStyle,
                                 ),
+                                dashboardInstalledView(
+                                  controller: controller,
+                                  noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,
+                                  installedapps: getInstalledMiniApps(),
+
+                                    coloumns: 3
+
+                                ),
+                                WalletPageView(
+                                  controller: controller,
+                                  noDataTextStyle: AppStyleConfig.dashBoardPageStyle.noDataTextStyle,
+
+                                ),
+                                SettingsView()
                               ],
                             )
                         )),
@@ -454,13 +146,14 @@ DashboardController createController({String? tag}) => Get.put(DashboardControll
                               ],
                               currentIndex: controller.selectedIndex.value,
                               onTap: (int index) {
+                                // if (index == 4) { // Assuming the settings bar item is at index 2
+                                //   controller.gotoSettings();
+                                // }
                                 // First, update the index to switch the view
                                 controller.updateIndex(index);
 
+
                                 // Then, if the tapped item is the settings item, call the gotoSettings function
-                                if (index == 4) { // Assuming the settings bar item is at index 2
-                                  controller.gotoSettings();
-                                }
                               },
                             ),
                             )

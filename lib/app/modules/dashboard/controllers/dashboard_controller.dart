@@ -51,6 +51,8 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
   var delete = false.obs;
   var info = false.obs;
   var shortcut = false.obs;
+  var title = true.obs;
+  var edit = true.obs;
 
   var archiveSettingEnabled = true.obs;
 
@@ -61,7 +63,7 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
 
 
   TabController? tabController;
-  final List<String> titleNames = ["Chats", "Calls", "Apps","Wallet"];
+  final List<String> titleNames = ["Chats", "Calls", "Apps","Wallet","Settings"];
   RxInt currentTab = 0.obs;
   var selectedIndex = 0.obs;
   var selectedName = "Chats".obs;
@@ -70,6 +72,8 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
     selectedIndex.value = index;
     selectedName.value = titleNames[index];
   }
+
+
 
 
   FocusNode _focusNode = FocusNode();
@@ -506,12 +510,30 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
 
   var isSearching = false.obs;
 
-  gotoSearch() {
+  gotoSearch(index) {
     isSearching(true);
     // frmRecentChatList(recentChats);
-    /*Future.delayed(const Duration(milliseconds: 100), () {
-      NavUtils.toNamed(Routes.recentSearch, arguments: {"recents": recentChats});
-    });*/
+    // if (index == 2) {
+    //   Future.delayed(const Duration(milliseconds: 100), () {
+    //     NavUtils.toNamed(Routes.chatSearch, arguments: {"recents": recentChats});
+    //   });
+    // };
+    Future.delayed(const Duration(milliseconds: 100), () {
+      NavUtils.toNamed(Routes.chatSearch, arguments: {"recents": recentChats});
+    });
+  }
+
+  gotoAppsList(index) {
+    isSearching(true);
+    // frmRecentChatList(recentChats);
+    // if (index == 2) {
+    //   Future.delayed(const Duration(milliseconds: 100), () {
+    //     NavUtils.toNamed(Routes.chatSearch, arguments: {"recents": recentChats});
+    //   });
+    // };
+    Future.delayed(const Duration(milliseconds: 100), () {
+      NavUtils.toNamed(Routes.appstore, arguments: {"recents": recentChats});
+    });
   }
 
   gotoCreateGroup() {
@@ -581,6 +603,8 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
     delete(false);
     info(false);
     shortcut(false);
+    title(true);
+    edit(true);
     update();
   }
 
@@ -668,6 +692,8 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
         unmute(item.isMuted!);
         mute(!item.isMuted!);
         shortcut(true);
+        title(false);
+        edit(false);
       } else {
         unmute(false);
         mute(false);

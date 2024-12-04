@@ -11,12 +11,14 @@ abstract class Routes {
   static const viewMedia = _Paths.viewMedia;
   // static const recentSearch = _Paths.recentSearch;
   static const login = _Paths.login;
+  static const onboard = _Paths.onboard;
   static const otp = _Paths.otp;
   static const countries = _Paths.countries;
   static const profile = _Paths.profile;
   static const statusList = _Paths.statusList;
   static const contacts = _Paths.contacts;
   static const chat = _Paths.chat;
+  static const appstore = _Paths.appstore;
   static const forwardChat = _Paths.forwardChat;
   static const chatSearch = _Paths.chatSearch;
   static const locationSent = _Paths.locationSent;
@@ -70,7 +72,9 @@ abstract class _Paths {
   static const createGroup = '/create_group';
   static const groupInfo = '/group_info';
   static const viewMedia = '/view_all_media';
+  static const appstore = '/appstore';
   // static const recentSearch = '/recent_search';
+  static const onboard = '/onboarding';
   static const login = '/login';
   static const otp = '/otp';
   static const countries = '/Countries';

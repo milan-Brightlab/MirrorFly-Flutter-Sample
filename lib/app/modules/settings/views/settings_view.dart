@@ -22,10 +22,10 @@ class SettingsView extends NavView<SettingsController> {
     return Theme(
       data: Theme.of(context).copyWith(appBarTheme: AppStyleConfig.settingsPageStyle.appBarTheme),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(getTranslated("settings")),
-          automaticallyImplyLeading: true,
-        ),
+        // appBar: AppBar(
+        //   title: Text(getTranslated("settings")),
+        //   automaticallyImplyLeading: true,
+        // ),
         body: SingleChildScrollView(
           child: Column(
             children: [

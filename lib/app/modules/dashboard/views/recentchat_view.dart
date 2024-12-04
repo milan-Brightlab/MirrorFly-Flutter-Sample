@@ -13,6 +13,7 @@ import '../../../data/helper.dart';
 import '../../../data/utils.dart';
 import '../../../routes/route_settings.dart';
 import '../widgets.dart';
+import '../../dashboard/dashboard_widgets/appbar_widgets.dart';
 
 class RecentChatView extends StatelessWidget {
   const RecentChatView({super.key,required this.controller,required this.archivedTileStyle, this.recentChatItemStyle = const RecentChatItemStyle(), required this.noDataTextStyle, this.contactItemStyle = const ContactItemStyle()});
@@ -22,185 +23,238 @@ class RecentChatView extends StatelessWidget {
   final ContactItemStyle contactItemStyle;
   final TextStyle noDataTextStyle;
 
+
   @override
   Widget build(BuildContext context) {
-    return Obx(() => controller.clearVisible.value
-        ? recentSearchView(context)
-        : Stack(
-      children: [
-        Obx(() {
-          return Visibility(
-              visible: !controller.recentChatLoading.value && controller.recentChats.isEmpty && controller.archivedChats.isEmpty,
-              child: emptyChat(context));
-        }),
-        Column(
-          children: [
-            Visibility(
-              visible: Constants.enableTopic,
+    final popupMenuThemeData = Theme.of(context).popupMenuTheme;
+
+    return Scaffold(
+      body: Column(
+        children: [
+          // Custom App Bar at the top
+          CustomAppBar(
+            controller: controller,
+            popupMenuThemeData: popupMenuThemeData,
+            title: "Chats",
+            availableWidth: 0.8,
+          ),
+
+          // Search Bar AppBar
+          AppBar(
+            toolbarHeight: 50,
+            title: Center(
               child: SizedBox(
-                height: 40,
-                child: Obx(() {
-                  return ListView.builder(
-                    key: const PageStorageKey("list"),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.topics.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                        onTap: () {
-                          controller.onTopicsTap(index);
-                        },
-                        child: Obx(() {
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0), // Specify the border radius
-                              side: (controller.topicId.value == controller.topics[index].topicId)
-                                  ? const BorderSide(
-                                color: Colors.blue, // Specify the border color
-                                width: 2.0, // Specify the border width
-                              )
-                                  : BorderSide.none,
-                            ),
-                            color: Colors.grey[100],
-                            margin: const EdgeInsets.all(4.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(controller.topics[index].topicName.checkNull()),
-                            ),
-                          );
-                        }),
-                      );
-                    },
-                  );
-                }),
+                width: 350,
+                child: GestureDetector(
+                  onTap: () {
+                    controller.gotoSearch(controller.selectedIndex.value);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search,
+                          size: 20,
+                          color: Colors.grey[500],
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Search',
+                          style: TextStyle(color: Colors.grey[500], fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-            /*Visibility(
-              visible: Constants.enableTopic,
-              child: SizedBox(
-                child: Obx(() {
-                  return controller.topics.isNotEmpty ? Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0), // Specify the border radius
-                      ),
-                      color: Colors.grey[100],
-                      margin: const EdgeInsets.all(4.0),
-                      child: ListTile(
-                        title: Text(controller.topics[0].topicName.checkNull()),
-                        subtitle: Text(controller.topics[0].metaData["description"]),
-                      )
-                  ) : const SizedBox.shrink();
+          ),
+
+          // Main Content
+          Expanded(
+            child: Obx(() => controller.clearVisible.value
+                ? recentSearchView(context)
+                : Stack(
+              children: [
+                Obx(() {
+                  return Visibility(
+                      visible: !controller.recentChatLoading.value &&
+                          controller.recentChats.isEmpty &&
+                          controller.archivedChats.isEmpty,
+                      child: emptyChat(context)
+                  );
                 }),
-              ),),*/
-            Obx(() {
-              return Visibility(
-                visible:
-                controller.archivedChats.isNotEmpty && controller.archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
-                child: ListItem(
-                  leading: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: AppUtils.svgIcon(icon:archive),
-                  ),
-                  title: Text(
-                    getTranslated("archived"),
-                    style: archivedTileStyle.textStyle,
-                  ),
-                  trailing: controller.archivedCount != "0"
-                      ? Text(
-                    controller.archivedCount,
-                    style: archivedTileStyle.countTextStyle,//const TextStyle(color: buttonBgColor),
-                  )
-                      : null,
-                  dividerPadding: EdgeInsets.zero,
-                  onTap: () {
-                    NavUtils.toNamed(Routes.archivedChats);
-                  },
-                ),
-              );
-            }),
-            Expanded(child: Obx(() {
-              return controller.recentChatLoading.value
-                  ? const Center(
-                child: CircularProgressIndicator(),
-              )
-                  : ListView.builder(
-                  padding: EdgeInsets.zero,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: controller.recentChats.length + 2,
-                  shrinkWrap: true,
-                  controller: controller.historyScrollController,
-                  itemBuilder: (BuildContext context, int index) {
-                    if (index < controller.recentChats.length) {
-                      var item = controller.recentChats[index];
-                      return Obx(() {
-                        return RecentChatItem(
-                          recentChatItemStyle: recentChatItemStyle,
-                          item: item,
-                          isSelected: controller.isSelected(index),
-                          typingUserid: controller.typingUser(item.jid.checkNull()),
-                          onTap: (RecentChatData chatItem) {
-                            if (controller.selected.value) {
-                              controller.selectOrRemoveChatfromList(index);
-                            } else {
-                              controller.toChatPage(item.jid.checkNull());
-                            }
-                          },
-                          onLongPress: (RecentChatData chatItem) {
-                            controller.selected(true);
-                            controller.selectOrRemoveChatfromList(index);
-                          },
-                          onAvatarClick: (RecentChatData chatItem) {
-                            controller.getProfileDetail(context, item, index);
-                          },
-                        );
-                      });
-                    } else if (index == controller.recentChats.length) {
-                      // Display loading indicator
-                      return Obx(() {
-                        return controller.isRecentHistoryLoading.value
-                            ? const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Center(
-                            child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator()),
-                          ),
-                        )
-                            : const SizedBox.shrink();
-                      });
-                    } else {
-                      return Obx(() {
-                        return Visibility(
-                          visible: controller.archivedChats.isNotEmpty &&
-                              !controller.archiveSettingEnabled.value /*&& controller.archivedCount.isNotEmpty*/,
-                          child: ListItem(
-                            leading: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: AppUtils.svgIcon(icon:archive),
-                            ),
-                            title: Text(
-                              getTranslated("archived"),
-                              style: const TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            trailing: controller.archivedChats.isNotEmpty
-                                ? Text(
-                              controller.archivedChats.length.toString(),
-                              style: const TextStyle(color: buttonBgColor),
-                            )
-                                : null,
-                            dividerPadding: EdgeInsets.zero,
-                            onTap: () {
-                              NavUtils.toNamed(Routes.archivedChats);
+                Column(
+                  children: [
+                    // Topics section
+                    Visibility(
+                      visible: Constants.enableTopic,
+                      child: SizedBox(
+                        height: 40,
+                        child: Obx(() {
+                          return ListView.builder(
+                            key: const PageStorageKey("list"),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: controller.topics.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                onTap: () {
+                                  controller.onTopicsTap(index);
+                                },
+                                child: Obx(() {
+                                  return Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      side: (controller.topicId.value == controller.topics[index].topicId)
+                                          ? const BorderSide(
+                                        color: Colors.blue,
+                                        width: 2.0,
+                                      )
+                                          : BorderSide.none,
+                                    ),
+                                    color: Colors.grey[100],
+                                    margin: const EdgeInsets.all(4.0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(controller.topics[index].topicName.checkNull()),
+                                    ),
+                                  );
+                                }),
+                              );
                             },
+                          );
+                        }),
+                      ),
+                    ),
+
+                    // Archived chats section
+                    Obx(() {
+                      return Visibility(
+                        visible: controller.archivedChats.isNotEmpty &&
+                            controller.archiveSettingEnabled.value,
+                        child: ListItem(
+                          leading: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: AppUtils.svgIcon(icon: archive),
                           ),
+                          title: Text(
+                            getTranslated("archived"),
+                            style: archivedTileStyle.textStyle,
+                          ),
+                          trailing: controller.archivedCount != "0"
+                              ? Text(
+                            controller.archivedCount,
+                            style: archivedTileStyle.countTextStyle,
+                          )
+                              : null,
+                          dividerPadding: EdgeInsets.zero,
+                          onTap: () {
+                            NavUtils.toNamed(Routes.archivedChats);
+                          },
+                        ),
+                      );
+                    }),
+
+                    // Recent chats list
+                    Expanded(
+                      child: Obx(() {
+                        return controller.recentChatLoading.value
+                            ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                            : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: controller.recentChats.length + 2,
+                            shrinkWrap: true,
+                            controller: controller.historyScrollController,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index < controller.recentChats.length) {
+                                var item = controller.recentChats[index];
+                                return Obx(() {
+                                  return RecentChatItem(
+                                    recentChatItemStyle: recentChatItemStyle,
+                                    item: item,
+                                    isSelected: controller.isSelected(index),
+                                    typingUserid: controller.typingUser(item.jid.checkNull()),
+                                    onTap: (RecentChatData chatItem) {
+                                      if (controller.selected.value) {
+                                        controller.selectOrRemoveChatfromList(index);
+                                      } else {
+                                        controller.toChatPage(item.jid.checkNull());
+                                      }
+                                    },
+                                    onLongPress: (RecentChatData chatItem) {
+                                      controller.selected(true);
+                                      controller.selectOrRemoveChatfromList(index);
+                                    },
+                                    onAvatarClick: (RecentChatData chatItem) {
+                                      controller.getProfileDetail(context, item, index);
+                                    },
+                                  );
+                                });
+                              } else if (index == controller.recentChats.length) {
+                                return Obx(() {
+                                  return controller.isRecentHistoryLoading.value
+                                      ? const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator()
+                                      ),
+                                    ),
+                                  )
+                                      : const SizedBox.shrink();
+                                });
+                              } else {
+                                return Obx(() {
+                                  return Visibility(
+                                    visible: controller.archivedChats.isNotEmpty &&
+                                        !controller.archiveSettingEnabled.value,
+                                    child: ListItem(
+                                      leading: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                        child: AppUtils.svgIcon(icon: archive),
+                                      ),
+                                      title: Text(
+                                        getTranslated("archived"),
+                                        style: const TextStyle(fontWeight: FontWeight.w500),
+                                      ),
+                                      trailing: controller.archivedChats.isNotEmpty
+                                          ? Text(
+                                        controller.archivedChats.length.toString(),
+                                        style: const TextStyle(color: buttonBgColor),
+                                      )
+                                          : null,
+                                      dividerPadding: EdgeInsets.zero,
+                                      onTap: () {
+                                        NavUtils.toNamed(Routes.archivedChats);
+                                      },
+                                    ),
+                                  );
+                                });
+                              }
+                            }
                         );
-                      });
-                    }
-                  });
-            })
-              // }),
+                      }),
+                    ),
+                  ],
+                ),
+              ],
+            )
             ),
-          ],
-        )
-      ],
-    ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget recentSearchView(BuildContext context) {

@@ -31,6 +31,7 @@ import '../modules/image_view/views/image_view_view.dart';
 import '../modules/local_contact/views/local_contact_view.dart';
 import '../modules/login/views/country_list_view.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/onboarding/views/onboarding_view.dart';
 import '../modules/login/views/otp_view.dart';
 import '../modules/media_preview/views/media_preview_view.dart';
 import '../modules/message_info/views/message_info_view.dart';
@@ -54,6 +55,7 @@ import '../modules/video_preview/views/video_player_view.dart';
 import '../modules/video_preview/views/video_preview_view.dart';
 import '../modules/view_all_media/views/view_all_media_view.dart';
 import '../modules/view_all_media_preview/views/view_all_media_preview_view.dart';
+import '../modules/apps/views/apps_store_view.dart  ';
 
 part 'app_routes.dart';
 
@@ -64,6 +66,8 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => const DashboardView(),settings: settings);
      case Routes.login:
       return MaterialPageRoute(builder: (_) => const LoginView(),settings: settings);
+    case Routes.onboard:
+      return MaterialPageRoute(builder: (_) =>  OnboardingView(),settings: settings);
     case Routes.otp:
       return MaterialPageRoute(builder: (_) => const OtpView(),settings: settings);
     case Routes.dashboard:
@@ -93,6 +97,8 @@ Route<dynamic>? mirrorFlyRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (_) => ForwardChatView(forwardMessageIds: arguments['messageIds']),settings: settings);
     case Routes.chatSearch:
       return MaterialPageRoute(builder: (_) => ChatSearchView(),settings: settings);
+    case Routes.appstore:
+      return MaterialPageRoute(builder: (_) => AppsSearchView(),settings: settings);
     case Routes.locationSent:
       return MaterialPageRoute(builder: (_) => const LocationSentView(),settings: settings);
     case Routes.contacts:

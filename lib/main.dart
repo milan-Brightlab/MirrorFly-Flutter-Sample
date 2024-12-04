@@ -66,6 +66,10 @@ Future<void> main() async {
     await Firebase.initializeApp();
     if (Platform.isAndroid) {
       FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      await PushNotifications.setupFlutterNotifications();
+      await SessionManagement.onInit();  // Since you're using this in background handler
+      PushNotifications.init();
+
     }
   }
 
@@ -76,7 +80,7 @@ Future<void> main() async {
   //check app opened from notification
   notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 
-  await SessionManagement.onInit();
+  // await SessionManagement.onInit();
   Mirrorfly.initializeSDK(
       licenseKey: 'B69tZ9ei1km1V8GLjcAZmH0m87en18',
       iOSContainerID: 'group.com.mirrorfly.flutter', //group.com.mirrorfly.flutter

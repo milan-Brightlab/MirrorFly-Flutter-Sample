@@ -80,4 +80,5 @@ class AppStyle{
 
 class AppColor{
   static const primaryColor = Color(0xff3276E2);
+  static var zambiziColor = Color(0xffff8001);
 }

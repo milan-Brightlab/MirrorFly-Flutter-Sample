@@ -1,5 +1,5 @@
-name: mirror_fly_demo
-version: 3.0.0+05
+name: zambizi
+version: 3.0.1+30005
 build_release_date: Jul 2024
 publish_to: none
 description: A MirrorFly Flutter Sample Application.
@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   get: 4.6.6
+  webview_flutter: ^4.0.6
   shared_preferences: ^2.3.2
   flutter_svg: ^2.0.10+1
   cached_network_image: ^3.4.1
@@ -58,6 +59,7 @@ dependencies:
   flutter_libphonenumber: ^2.3.3
   fading_edge_scrollview: ^4.1.1
   mirrorfly_plugin: ^1.0.7-beta
+  smooth_page_indicator: 1.2.0+3
 
   #Packages Not Needed for UIKIT
   otp_text_field: ^1.1.3
@@ -88,6 +90,7 @@ flutter:
     - assets/animation/
     - assets/locales/
     - pubspec.yaml
+
 
   fonts:
     - family: sf_ui

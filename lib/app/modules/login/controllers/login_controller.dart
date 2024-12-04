@@ -45,6 +45,8 @@ class LoginController extends GetxController {
 
   var seconds = 0.obs;
 
+  late RxBool showWelcome;
+
   final _smsCode = "".obs;
 
   String get smsCode => _smsCode.value;

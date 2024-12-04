@@ -62,6 +62,7 @@ class AppColors{
   static const Color speakingBg = Color(0xff3abf87);
   static const Color transBlack75 = Color(0xBF000000);
   static const Color participantUnMuteColor = Color(0xffe3e2e2);
+  static const Color zambiziOrange = Color(0xffff8001);
 }
 //call Assets
 const String plusIcon = 'assets/calls/plus_icon.svg';
@@ -80,6 +81,22 @@ const String gridIcon = 'assets/calls/grid_icon.svg';
 
 const String audioCallIcon = 'assets/calls/audiocall.svg';
 const String videoCallIcon = 'assets/calls/videocall.svg';
+
+
+const String apps_ambulance = 'assets/logos/apps_ambulance.png';
+const String apps_lawyer = 'assets/logos/apps_lawyer.png';
+const String apps_panic = 'assets/logos/apps_panic.png';
+const String apps_education = 'assets/logos/apps_education.png';
+const String apps_travel = 'assets/logos/apps_travel.png';
+const String apps_gaming = 'assets/logos/apps_gaming.png';
+const String apps_entertainment = 'assets/logos/apps_entertainment.png';
+const String apps_music = 'assets/logos/apps_music.png';
+const String apps_radio = 'assets/logos/apps_radio.png';
+const String apps_store = 'assets/logos/apps_store.png';
+const String apps_electricityAndWater = 'assets/logos/apps_electricity_and_water.png';
+const String apps_vouchers = 'assets/logos/apps_Vouchers.png';
+const String apps_dataAndAirtime = 'assets/logos/apps_data_and_airtime.png';
+const String apps_water = 'assets/logos/apps_bulk_water.png';
 
 const String videoInactive = 'assets/calls/video_inactive.svg';
 const String videoActive = 'assets/calls/video_active.svg';
@@ -110,10 +127,15 @@ const String addParticipantsInCall = 'assets/calls/add_user_in_call.svg';
 //Assets
 const String mirrorflySmall = 'assets/logos/ic_notification_small.png';
 const String registerIcon = 'assets/logos/register_logo.svg';
-// const String zambiziLogo = 'assets/logos/zambizi_logo.svg';
+const String zambiziSideLogo = 'assets/logos/zambizi_side_logo.png';
+const String etheruim = 'assets/logos/ethereum-eth-logo.png';
+const String dollarLogo = 'assets/logos/dollar_logo.png';
+const String goldLogo = 'assets/logos/krugerrand_troygold.png';
+const String zambiziLogo = 'assets/logos/zambizi_logo.svg';
 const String statusIcon = 'assets/logos/status.svg';
 const String searchIcon = 'assets/logos/magnifying_glass.svg';
 const String dotMenu = 'assets/logos/dotMenu.svg';
+const String visaLogo = 'assets/logos/visa.png';
 const String newChat = 'assets/logos/newChat.svg';
 const String groupIcon = 'assets/logos/group_ic.svg';
 const String chatFabIcon = 'assets/logos/chat_fab.svg';
